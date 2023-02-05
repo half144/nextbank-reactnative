@@ -1,20 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import "react-native-gesture-handler";
+import "react-native-reanimated";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ThemeProvider } from "styled-components/native";
+import AuthProvider from "./src/context/AuthContext";
+import Router from "./src/routes";
+
+const theme = {
+  primary: "red",
+  primaryShadow: "#E96600",
+};
+
+const queryClient = new QueryClient();
+
+queryClient.defaultQueryOptions({
+  keepPreviousData: true,
+  staleTime: 1000 * 20,
+});
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <AuthProvider>
+            <StatusBar style="auto" />
+            <Router />
+          </AuthProvider>
+        </NavigationContainer>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
